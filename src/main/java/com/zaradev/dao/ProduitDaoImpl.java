@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.cj.protocol.Resultset;
 import com.zaradev.bo.Produit;
 
 public class ProduitDaoImpl implements IProduitDao{
@@ -65,19 +66,64 @@ public class ProduitDaoImpl implements IProduitDao{
 
 	@Override
 	public Produit getProduit(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Produit produit = null;
+		Connection connection =SingletonConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM PRODUITS WHERE id = ?");
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				produit = new Produit();
+				produit.setId(rs.getLong("ID"));
+				produit.setDesignation(rs.getString("DESIGNATION"));
+				produit.setPrix(rs.getDouble("PRIX"));
+				produit.setQuantite(rs.getInt("QUANTITE"));
+			}
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return produit;
 	}
 
 	@Override
 	public Produit update(Produit produit) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection connection = SingletonConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement("UPDATE PRODUITS SET DESIGNATION = ?, PRIX = ?, QUANTITE = ? WHERE ID = ?");
+			ps.setString(1, produit.getDesignation());
+			ps.setDouble(2, produit.getPrix());
+			ps.setInt(3, produit.getQuantite());
+			ps.setLong(4, produit.getId());
+			
+			ps.executeUpdate();
+			ps.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return produit;
 	}
 
 	@Override
 	public void deleteProduit(Long id) {
-		// TODO Auto-generated method stub
+		
+		
+		Connection connection = SingletonConnection.getConnection();
+		
+		try {
+			PreparedStatement ps = connection.prepareStatement("DELETE FROM PRODUITS WHERE ID = ?");
+			ps.setLong(1, id);
+			ps.executeUpdate();
+			ps.close();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
 		
 	}
 

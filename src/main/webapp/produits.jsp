@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 </head>
 <body>
+	<%@include file="header.jsp" %>
 	<br>
 	<div class="container col-md-10 offset-md-1">
 		<div class="card">
@@ -37,6 +38,8 @@
 							<td>${produit.designation}</td>
 							<td>${produit.prix}</td>
 							<td>${produit.quantite}</td>
+							<td><a onclick="return confirm('Etes vous sûre ?')" href="supprimer.do?id=${produit.id}">Supprimer</a></td>
+							<td><a href="edit.do?id=${produit.id}">Edit</a></td>
 						</tr>
 					</c:forEach>
 					
